@@ -7,21 +7,16 @@ export default async function Page() {
       TableName: process.env.DYNAMODB_TABLE_NAME,
     }),
   );
-  const comments = (response.Items ?? []) as Array<{
-    comment?: string;
-    id?: string;
-  }>;
+  const items = response.Items ?? [];
 
   return (
     <main className="main">
       <h1 className="title">Next.js + DynamoDB</h1>
 
       <div className="container">
-        {comments.map((comment) => (
-          <div key={comment.id}>
-            <p>{comment.comment}</p>
-            <div className="metadata">{comment.id}</div>
-          </div>
+        <p>{items.length} item(s) in table</p>
+        {items.map((item, i) => (
+          <pre key={i}>{JSON.stringify(item, null, 2)}</pre>
         ))}
       </div>
     </main>
