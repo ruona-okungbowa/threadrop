@@ -5,6 +5,8 @@ import type { Drop, SizeKey } from "@/lib/drop-data";
 import { formatPrice } from "@/lib/drop-data";
 import { Countdown } from "./countdown";
 import { pad } from "./use-countdown";
+import { CheckoutDrawer } from "./checkout-drawer";
+import { OrderTicket, type Claim } from "./order-ticket";
 
 type Phase = "PRELAUNCH" | "LIVE" | "ENDED";
 const HOLD_MS = 1000 * 60 * 10; // 10 minute hold
@@ -14,6 +16,8 @@ export function BuyBox({ drop }: { drop: Drop }) {
   const [selected, setSelected] = useState<SizeKey | null>(null);
   const [holdExpiresAt, setHoldExpiresAt] = useState<number | null>(null);
   const [heldSize, setHeldSize] = useState<SizeKey | null>(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [claim, setClaim] = useState<Claim | null>(null);
 
   // global one-second tick so derived phase + hold timer stay live
   useEffect(() => {
@@ -52,6 +56,28 @@ export function BuyBox({ drop }: { drop: Drop }) {
     if (!selected) return;
     setHeldSize(selected);
     setHoldExpiresAt(Date.now() + HOLD_MS);
+  }
+
+  function releaseHold() {
+    setHoldExpiresAt(null);
+    setHeldSize(null);
+    setCheckoutOpen(false);
+  }
+
+  function handlePaid(email: string) {
+    setCheckoutOpen(false);
+    setClaim({
+      dropNo: 42,
+      claimId: 7000 + Math.floor(Math.random() * 2999),
+      pieceNo: claimed + 1,
+      size: heldSize ?? selected ?? "M",
+      email,
+    });
+  }
+
+  // the reward replaces the page entirely
+  if (claim) {
+    return <OrderTicket drop={drop} claim={claim} />;
   }
 
   if (soldOut || phase === "ENDED") {
@@ -133,6 +159,7 @@ export function BuyBox({ drop }: { drop: Drop }) {
             remainingMs={holdRemaining}
             currency={drop.currency}
             totalPence={totalPence}
+            onCheckout={() => setCheckoutOpen(true)}
           />
         ) : (
           <button
@@ -153,6 +180,18 @@ export function BuyBox({ drop }: { drop: Drop }) {
       <div className="mt-14">
         <Specs items={drop.specs} />
       </div>
+
+      {heldSize && (
+        <CheckoutDrawer
+          drop={drop}
+          size={heldSize}
+          remainingMs={holdRemaining}
+          open={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+          onRelease={releaseHold}
+          onPaid={handlePaid}
+        />
+      )}
     </div>
   );
 }
@@ -245,11 +284,13 @@ function HeldState({
   remainingMs,
   currency,
   totalPence,
+  onCheckout,
 }: {
   size: SizeKey | null;
   remainingMs: number;
   currency: string;
   totalPence: number;
+  onCheckout: () => void;
 }) {
   const mins = Math.floor(remainingMs / 1000 / 60);
   const secs = Math.floor((remainingMs / 1000) % 60);
@@ -265,6 +306,7 @@ function HeldState({
       </div>
       <button
         type="button"
+        onClick={onCheckout}
         className="w-full rounded-[var(--radius)] bg-accent py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-accent-foreground transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.985]"
       >
         Check out — {formatPrice(totalPence, currency)}
