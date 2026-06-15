@@ -19,7 +19,7 @@ export interface Drop {
   endsAt: number;
   sizes: SizeVariant[];
   gallery: { label: string; tone: string }[];
-  details: string[];
+  specs: { label: string; value: string }[];
 }
 
 const now = Date.now();
@@ -49,11 +49,11 @@ export const drop: Drop = {
     { label: "on-body", tone: "#2c2c28" },
     { label: "scale", tone: "#201f1a" },
   ],
-  details: [
-    "450gsm brushed-back loopback cotton",
-    "Boxy cropped fit — size up for drape",
-    "Numbered woven label, 1 of 50",
-    "Ships within 5 working days",
+  specs: [
+    { label: "Fabric", value: "450gsm brushed-back loopback cotton" },
+    { label: "Fit", value: "Boxy cropped — size up for drape" },
+    { label: "Detail", value: "Numbered woven label, 1 of 50" },
+    { label: "Dispatch", value: "Ships within 5 working days" },
   ],
 };
 

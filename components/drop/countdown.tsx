@@ -23,44 +23,26 @@ export function Countdown({
         ? "Closes in"
         : "Drop closed";
 
-  const segments = [
-    { v: t ? pad(t.hours) : "--", k: "hrs" },
-    { v: t ? pad(t.minutes) : "--", k: "min" },
-    { v: t ? pad(t.seconds) : "--", k: "sec" },
-  ];
+  const value = t
+    ? `${pad(t.hours)}:${pad(t.minutes)}:${pad(t.seconds)}`
+    : "--:--:--";
 
+  // A quiet, single-line readout — present, but not competing with the title or action.
   return (
-    <div className="flex flex-col gap-2.5">
-      <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-subtle">
+    <div className="flex items-center gap-2.5">
+      {phase !== "ENDED" && (
+        <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
+      )}
+      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">
         {label}
       </span>
-      <div className="flex items-end gap-3">
-        {segments.map((seg, i) => (
-          <div key={seg.k} className="flex items-end gap-3">
-            <div className="flex flex-col items-center">
-              <span
-                className={`font-mono text-5xl leading-none tabular-nums tracking-tight ${
-                  phase === "ENDED" ? "text-faint" : "text-accent"
-                }`}
-              >
-                {seg.v}
-              </span>
-              <span className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-faint">
-                {seg.k}
-              </span>
-            </div>
-            {i < segments.length - 1 && (
-              <span
-                className={`pb-5 font-mono text-3xl leading-none ${
-                  phase === "ENDED" ? "text-faint" : "text-accent"
-                }`}
-              >
-                :
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
+      <span
+        className={`font-mono text-sm tabular-nums tracking-tight ${
+          phase === "ENDED" ? "text-faint" : "text-foreground"
+        }`}
+      >
+        {value}
+      </span>
     </div>
   );
 }

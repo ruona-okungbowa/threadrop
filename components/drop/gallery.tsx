@@ -10,42 +10,47 @@ export function Gallery({ drop }: { drop: Drop }) {
   const thumbs = drop.gallery.slice(1);
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* Full-bleed hero */}
-      <div
-        className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius)] border border-border"
+    <div className="flex flex-col gap-2">
+      {/* Cinematic hero — taller, edge-to-edge, the emotional centerpiece */}
+      <figure
+        className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius)]"
         style={{ backgroundColor: hero.tone }}
       >
-        <span className="absolute left-4 top-4 font-mono text-[11px] uppercase tracking-[0.18em] text-subtle">
+        {/* soft directional light to make the void feel intentional, not empty */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(120% 90% at 30% 18%, rgba(255,255,255,0.07), transparent 55%)",
+          }}
+        />
+        <figcaption className="absolute bottom-5 left-5 font-mono text-[11px] uppercase tracking-[0.24em] text-faint">
           {hero.label}
-        </span>
-        <span className="absolute bottom-4 right-4 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
-          {drop.currency === "£" ? "1600 × 2000" : ""}
-        </span>
-      </div>
+        </figcaption>
+      </figure>
 
-      {/* Thumbnails: detail, on-body, scale */}
-      <div className="grid grid-cols-3 gap-3">
+      {/* Considered gallery strip — quieter, supporting the hero */}
+      <div className="grid grid-cols-3 gap-2">
         {thumbs.map((shot, i) => {
           const idx = i + 1;
+          const isActive = active === idx;
           return (
-          <button
-            key={shot.label}
-            type="button"
-            onClick={() => setActive(active === idx ? 0 : idx)}
-            aria-label={`View ${shot.label} image`}
-            aria-pressed={active === idx}
-            className={`group relative aspect-square w-full overflow-hidden rounded-[var(--radius)] border transition-all duration-200 ease-out ${
-              active === idx
-                ? "border-foreground"
-                : "border-border hover:border-subtle"
-            }`}
-            style={{ backgroundColor: shot.tone }}
-          >
-            <span className="absolute left-2.5 bottom-2 font-mono text-[10px] uppercase tracking-[0.16em] text-subtle transition-colors duration-200 group-hover:text-foreground">
-              {shot.label}
-            </span>
-          </button>
+            <button
+              key={shot.label}
+              type="button"
+              onClick={() => setActive(isActive ? 0 : idx)}
+              aria-label={`View ${shot.label} image`}
+              aria-pressed={isActive}
+              className={`group relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius)] transition-all duration-200 ease-out ${
+                isActive ? "opacity-100" : "opacity-65 hover:opacity-100"
+              }`}
+              style={{ backgroundColor: shot.tone }}
+            >
+              <span className="absolute bottom-2.5 left-3 font-mono text-[10px] uppercase tracking-[0.18em] text-faint transition-colors duration-200 group-hover:text-subtle">
+                {shot.label}
+              </span>
+            </button>
           );
         })}
       </div>

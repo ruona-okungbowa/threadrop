@@ -59,116 +59,101 @@ export function BuyBox({ drop }: { drop: Drop }) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* status pill + countdown */}
-      <div className="flex flex-col gap-5">
-        <StatusPill phase={phase} />
-        <Countdown
-          startsAt={drop.startsAt}
-          endsAt={drop.endsAt}
-          phase={phase}
-        />
-      </div>
-
-      <div className="h-px w-full bg-border" />
-
-      {/* title block */}
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-subtle">
+    <div className="flex flex-col">
+      {/* ── HERO ZONE: the title wins. Brand eyebrow, dominant display serif,
+          edition + a quiet status/countdown line in support. ── */}
+      <div className="flex flex-col gap-4">
+        <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
           {drop.brand} — 1 of {drop.initialStock}
         </span>
-        <h1 className="font-serif text-5xl font-light leading-[0.95] tracking-tight text-balance md:text-6xl">
+        <h1 className="font-serif text-[3.75rem] font-light leading-[0.9] tracking-[-0.02em] text-balance md:text-7xl">
           {drop.title}
         </h1>
         <p className="font-mono text-sm leading-relaxed text-subtle">
           {drop.edition}
         </p>
+        <div className="mt-1">
+          <Countdown
+            startsAt={drop.startsAt}
+            endsAt={drop.endsAt}
+            phase={phase}
+          />
+        </div>
       </div>
 
-      {/* price */}
-      <div className="flex items-baseline gap-3">
-        <span className="font-mono text-2xl tabular-nums text-foreground">
-          {formatPrice(drop.pricePence, drop.currency)}
-        </span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
-          incl. VAT
-        </span>
-      </div>
-
-      {/* stock progress */}
-      <StockBar
-        remaining={remaining}
-        total={drop.initialStock}
-        pct={pct}
-        low={lowStock}
-      />
-
-      {/* size selector */}
-      <SizeSelector
-        drop={drop}
-        selected={selected}
-        onSelect={setSelected}
-        disabled={isHeld}
-      />
-
-      {/* shipping + total, shown before the action */}
-      <div className="flex flex-col gap-2 font-mono text-sm">
-        <Row label="Piece" value={formatPrice(drop.pricePence, drop.currency)} />
-        <Row
-          label="Shipping"
-          value={formatPrice(drop.shippingPence, drop.currency)}
-        />
-        <div className="my-1 h-px w-full bg-border" />
-        <Row
-          label="Total today"
-          value={formatPrice(totalPence, drop.currency)}
-          emphasize
+      {/* ── PRICE + SCARCITY: one tight unit, set off by a generous void ── */}
+      <div className="mt-14 flex flex-col gap-4">
+        <div className="flex items-baseline gap-3">
+          <span className="font-mono text-2xl tabular-nums text-foreground">
+            {formatPrice(drop.pricePence, drop.currency)}
+          </span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
+            incl. VAT
+          </span>
+        </div>
+        <StockBar
+          remaining={remaining}
+          total={drop.initialStock}
+          pct={pct}
+          low={lowStock}
         />
       </div>
 
-      {/* primary action */}
-      {isHeld ? (
-        <HeldState
-          size={heldSize}
-          remainingMs={holdRemaining}
-          currency={drop.currency}
-          totalPence={totalPence}
+      {/* ── CHOICE + COST: size row and breakdown belong together ── */}
+      <div className="mt-14 flex flex-col gap-6">
+        <SizeSelector
+          drop={drop}
+          selected={selected}
+          onSelect={setSelected}
+          disabled={isHeld}
         />
-      ) : (
-        <button
-          type="button"
-          onClick={startHold}
-          disabled={!selected}
-          className="group relative w-full overflow-hidden rounded-[var(--radius)] bg-foreground py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:bg-muted-2 disabled:text-faint"
-        >
-          {selected ? `Hold size ${selected}` : "Select a size"}
-        </button>
-      )}
+        <div className="flex flex-col gap-2 font-mono text-sm">
+          <Row
+            label="Piece"
+            value={formatPrice(drop.pricePence, drop.currency)}
+          />
+          <Row
+            label="Shipping"
+            value={formatPrice(drop.shippingPence, drop.currency)}
+          />
+          <div className="my-1 h-px w-full bg-border" />
+          <Row
+            label="Total today"
+            value={formatPrice(totalPence, drop.currency)}
+            emphasize
+          />
+        </div>
+      </div>
 
-      <p className="font-mono text-[11px] leading-relaxed text-faint">
-        A hold reserves your piece for 10 minutes while you check out. One hold
-        per person. When it expires, the line moves.
-      </p>
+      {/* ── THE ACTION: the one clear move on the page ── */}
+      <div className="mt-6 flex flex-col gap-3">
+        {isHeld ? (
+          <HeldState
+            size={heldSize}
+            remainingMs={holdRemaining}
+            currency={drop.currency}
+            totalPence={totalPence}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={startHold}
+            disabled={!selected}
+            className="group relative w-full overflow-hidden rounded-[var(--radius)] bg-foreground py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:bg-muted-2 disabled:text-faint"
+          >
+            {selected ? `Hold size ${selected}` : "Select a size"}
+          </button>
+        )}
+        <p className="font-mono text-[11px] leading-relaxed text-faint">
+          A hold reserves your piece for 10 minutes while you check out. One hold
+          per person. When it expires, the line moves.
+        </p>
+      </div>
 
-      <Details items={drop.details} />
+      <div className="mt-14">
+        <Specs items={drop.specs} />
+      </div>
     </div>
-  );
-}
-
-function StatusPill({ phase }: { phase: Phase }) {
-  if (phase === "PRELAUNCH") {
-    return (
-      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-subtle">
-        <span className="h-1.5 w-1.5 rounded-full bg-subtle" />
-        Drop scheduled
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-      <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
-      Live now
-    </span>
   );
 }
 
@@ -186,10 +171,10 @@ function StockBar({
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.18em]">
-        <span className={low ? "text-accent" : "text-subtle"}>
+        <span className={low ? "text-accent" : "text-foreground"}>
           {remaining} of {total} left
         </span>
-        <span className="text-faint">{low ? "Going fast" : "In stock"}</span>
+        <span className="tabular-nums text-faint">{total - remaining} claimed</span>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-muted-2">
         <div
@@ -364,7 +349,7 @@ function SoldOut({ drop, claimed }: { drop: Drop; claimed: number }) {
         </form>
       )}
 
-      <Details items={drop.details} />
+      <Specs items={drop.specs} />
     </div>
   );
 }
@@ -396,17 +381,22 @@ function Row({
   );
 }
 
-function Details({ items }: { items: string[] }) {
+function Specs({ items }: { items: { label: string; value: string }[] }) {
   return (
-    <div className="flex flex-col gap-2.5 border-t border-border pt-6">
-      {items.map((d) => (
-        <div key={d} className="flex items-start gap-3">
-          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-faint" />
-          <span className="font-mono text-[12px] leading-relaxed text-subtle">
-            {d}
-          </span>
+    <dl className="flex flex-col border-t border-border">
+      {items.map((s) => (
+        <div
+          key={s.label}
+          className="grid grid-cols-[5.5rem_1fr] items-baseline gap-4 border-b border-border/60 py-3"
+        >
+          <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-faint">
+            {s.label}
+          </dt>
+          <dd className="font-mono text-[12px] leading-relaxed text-subtle">
+            {s.value}
+          </dd>
         </div>
       ))}
-    </div>
+    </dl>
   );
 }
