@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Gallery } from "@/components/drop/gallery";
 import { BuyBox } from "@/components/drop/buy-box";
+import { CartButton } from "@/components/cart/cart-button";
 import { drop } from "@/lib/drop-data";
 
 export default async function DropPage({
@@ -28,9 +29,12 @@ export default async function DropPage({
         >
           ← All drops
         </Link>
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-          {drop.initialStock} made
-        </span>
+        <div className="flex items-center gap-5">
+          <span className="hidden font-mono text-[11px] uppercase tracking-[0.2em] text-faint sm:inline">
+            {drop.initialStock} made
+          </span>
+          <CartButton />
+        </div>
       </header>
 
       {/* two-column drop layout: gallery ~55%, buy box ~45% */}

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
+import { CartProvider } from "@/lib/cart-context";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -34,7 +36,10 @@ export default function RootLayout({
       className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased bg-background`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
-        {children}
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

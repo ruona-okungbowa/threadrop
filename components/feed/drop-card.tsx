@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCountdown, pad } from "@/components/drop/use-countdown";
+import { QuickAdd } from "@/components/cart/quick-add";
 import { formatPrice, statusOf, type FeedDrop } from "@/lib/feed-data";
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -79,11 +80,11 @@ export function DropCard({
   }
 
   return (
-    <Link
-      href={`/drops/${drop.slug}`}
-      className="group flex flex-col gap-3 fade-rise"
+    <div
+      className="flex flex-col gap-3 fade-rise"
       style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}
     >
+      <Link href={`/drops/${drop.slug}`} className="group flex flex-col gap-3">
       {/* image */}
       <figure
         className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius)]"
@@ -137,7 +138,15 @@ export function DropCard({
           <StatusLine drop={drop} />
         </div>
       </div>
-    </Link>
+      </Link>
+
+      {/* quick add — only when the drop is live and buyable */}
+      {status === "LIVE" && (
+        <div className="mt-0.5">
+          <QuickAdd drop={drop} />
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { drops, statusOf } from "@/lib/feed-data";
+import { CartButton } from "@/components/cart/cart-button";
 
 export function SiteHeader() {
   const liveCount = drops.filter((d) => statusOf(d) === "LIVE").length;
@@ -34,13 +35,19 @@ export function SiteHeader() {
         </Link>
       </nav>
 
-      <Link
-        href="/drops"
-        className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground transition-opacity hover:opacity-70"
-      >
-        <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
-        {liveCount} drops live now
-      </Link>
+      <div className="flex items-center gap-5">
+        <Link
+          href="/drops"
+          className="hidden items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground transition-opacity hover:opacity-70 md:inline-flex"
+        >
+          <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
+          {liveCount} drops live now
+        </Link>
+        <span aria-hidden className="hidden text-faint md:inline">
+          —
+        </span>
+        <CartButton />
+      </div>
     </header>
   );
 }
