@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-/* themes: light (:root) + dark (.dark), toggled by next-themes */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* LIGHT — bone paper, warm off-black ink, ember-clay accent */
+/* Single editorial theme: bone paper, warm off-black ink, faded-brick accent */
 :root {
   --background: #f2f1ea;
   --foreground: #1a1916;
@@ -12,22 +9,10 @@
   --border: #d4d2c4;
   --subtle: #6b6a60;
   --faint: #a4a294;
-  --accent: #c5491f;
+  /* faded brick / dried clay — muted, earthy, quiet-luxury signal */
+  --accent: #9c4a32;
   --accent-foreground: #f7f6f0;
   --radius: 2px;
-}
-
-/* DARK — warm off-black, bone ink, brighter ember so it glows */
-.dark {
-  --background: #111110;
-  --foreground: #f2f1ea;
-  --muted: #1c1c1a;
-  --muted-2: #26261f;
-  --border: #2c2c28;
-  --subtle: #8a897f;
-  --faint: #56554d;
-  --accent: #e0602e;
-  --accent-foreground: #14110d;
 }
 
 @theme inline {
@@ -72,6 +57,46 @@ body {
 
 .live-dot {
   animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+/* Stock bar fills from 0 to its width on load */
+@keyframes stock-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.stock-fill {
+  transform-origin: left center;
+  animation: stock-fill 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Selected size pill settles in with a confident little pop */
+@keyframes size-select {
+  0% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.size-selected {
+  animation: size-select 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot,
+  .stock-fill,
+  .size-selected {
+    animation: none;
+  }
 }
 
 ::selection {

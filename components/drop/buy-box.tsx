@@ -139,7 +139,7 @@ export function BuyBox({ drop }: { drop: Drop }) {
             type="button"
             onClick={startHold}
             disabled={!selected}
-            className="group relative w-full overflow-hidden rounded-[var(--radius)] bg-foreground py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:bg-muted-2 disabled:text-faint"
+            className="group relative w-full overflow-hidden rounded-[var(--radius)] bg-foreground py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.985] disabled:cursor-not-allowed disabled:bg-muted-2 disabled:text-faint disabled:active:scale-100"
           >
             {selected ? `Hold size ${selected}` : "Select a size"}
           </button>
@@ -178,7 +178,7 @@ function StockBar({
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-muted-2">
         <div
-          className={`h-full rounded-full transition-all duration-500 ease-out ${
+          className={`stock-fill h-full rounded-full ${
             low ? "bg-accent" : "bg-foreground"
           }`}
           style={{ width: `${pct}%` }}
@@ -224,11 +224,14 @@ function SizeSelector({
                 out
                   ? "cursor-not-allowed border-border text-faint line-through decoration-faint"
                   : isSel
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border text-foreground hover:border-subtle disabled:hover:border-border"
+                    ? "size-selected z-10 -translate-y-0.5 border-foreground bg-foreground font-medium text-background shadow-[0_6px_16px_-6px_rgba(26,25,22,0.5)]"
+                    : "border-border text-foreground hover:-translate-y-0.5 hover:border-foreground active:translate-y-0 active:scale-95 disabled:hover:translate-y-0 disabled:hover:border-border"
               }`}
             >
               {size}
+              {isSel && (
+                <span className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-foreground" />
+              )}
             </button>
           );
         })}
@@ -262,7 +265,7 @@ function HeldState({
       </div>
       <button
         type="button"
-        className="w-full rounded-[var(--radius)] bg-accent py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-accent-foreground transition-all duration-200 ease-out hover:opacity-90"
+        className="w-full rounded-[var(--radius)] bg-accent py-4 font-mono text-sm font-medium uppercase tracking-[0.18em] text-accent-foreground transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.985]"
       >
         Check out — {formatPrice(totalPence, currency)}
       </button>
@@ -341,7 +344,7 @@ function SoldOut({ drop, claimed }: { drop: Drop; claimed: number }) {
             />
             <button
               type="submit"
-              className="h-12 rounded-[var(--radius)] bg-foreground px-6 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground"
+              className="h-12 rounded-[var(--radius)] bg-foreground px-6 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.97]"
             >
               Join
             </button>

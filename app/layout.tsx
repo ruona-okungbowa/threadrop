@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#111110",
+  themeColor: "#f2f1ea",
 };
 
 export default function RootLayout({
@@ -32,18 +31,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
       className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased bg-background`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

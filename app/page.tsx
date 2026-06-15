@@ -1,6 +1,5 @@
 import { Gallery } from "@/components/drop/gallery";
 import { BuyBox } from "@/components/drop/buy-box";
-import { ThemeToggle } from "@/components/drop/theme-toggle";
 import { drop } from "@/lib/drop-data";
 
 export default function Page() {
@@ -14,12 +13,9 @@ export default function Page() {
         <span className="hidden font-mono text-[11px] uppercase tracking-[0.2em] text-subtle sm:block">
           {drop.brand}
         </span>
-        <div className="flex items-center gap-4">
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-            {drop.initialStock} made
-          </span>
-          <ThemeToggle />
-        </div>
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
+          {drop.initialStock} made
+        </span>
       </header>
 
       {/* two-column drop layout: gallery ~55%, buy box ~45% */}
