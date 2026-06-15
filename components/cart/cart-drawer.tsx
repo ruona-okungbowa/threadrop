@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useCart, SHIPPING_PER_BRAND_PENCE } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/feed-data";
+import { CartTicket, type CartOrder } from "./cart-ticket";
 
 export function CartDrawer() {
   const cart = useCart();
   const { open, setOpen } = cart;
-  const [placed, setPlaced] = useState(false);
+  const [order, setOrder] = useState<CartOrder | null>(null);
   const [placing, setPlacing] = useState(false);
 
   // lock body scroll while open
@@ -32,16 +33,25 @@ export function CartDrawer() {
 
   // reset the confirmation when reopened with items
   useEffect(() => {
-    if (open && cart.count > 0) setPlaced(false);
+    if (open && cart.count > 0) setOrder(null);
   }, [open, cart.count]);
 
   if (!open) return null;
 
   function placeOrder() {
     setPlacing(true);
+    // snapshot the order before clearing the cart, so the ticket can render it
+    const snapshot: CartOrder = {
+      orderNo: 1000 + Math.floor(Math.random() * 8999),
+      groups: cart.groups,
+      count: cart.count,
+      brandCount: cart.brandCount,
+      totalPence: cart.totalPence,
+      currency: cart.currency,
+    };
     window.setTimeout(() => {
       setPlacing(false);
-      setPlaced(true);
+      setOrder(snapshot);
       cart.clear();
     }, 950);
   }
@@ -66,8 +76,8 @@ export function CartDrawer() {
         {/* header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 backdrop-blur-sm">
           <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground">
-            {placed ? "Order placed" : "Your cart"}
-            {!placed && !empty && (
+            {order ? "Order placed" : "Your cart"}
+            {!order && !empty && (
               <span className="ml-2 text-subtle">
                 {cart.count} {cart.count === 1 ? "piece" : "pieces"} ·{" "}
                 {cart.brandCount}{" "}
@@ -85,8 +95,8 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {placed ? (
-          <PlacedState onClose={() => setOpen(false)} />
+        {order ? (
+          <CartTicket order={order} onClose={() => setOpen(false)} />
         ) : empty ? (
           <EmptyState onClose={() => setOpen(false)} />
         ) : (
@@ -286,26 +296,4 @@ function EmptyState({ onClose }: { onClose: () => void }) {
   );
 }
 
-function PlacedState({ onClose }: { onClose: () => void }) {
-  return (
-    <div className="ticket-in flex flex-1 flex-col items-start justify-center px-6 pb-16">
-      <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-        Confirmed
-      </span>
-      <h2 className="mt-3 font-serif text-4xl font-light leading-[0.95] tracking-tight text-balance">
-        You got the lot.
-      </h2>
-      <p className="mt-5 max-w-xs font-mono text-sm leading-relaxed text-subtle">
-        Each label is preparing its parcel. We&apos;ve emailed a confirmation
-        with tracking for every shipment.
-      </p>
-      <button
-        type="button"
-        onClick={onClose}
-        className="mt-8 rounded-[var(--radius)] bg-foreground px-6 py-3.5 font-mono text-sm font-medium uppercase tracking-[0.18em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.985]"
-      >
-        Keep browsing
-      </button>
-    </div>
-  );
-}
+
