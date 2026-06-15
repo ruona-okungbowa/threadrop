@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* warm off-black + bone, single acid-lime accent */
+  --background: #111110;
+  --foreground: #f2f1ea;
+  --muted: #1c1c1a;
+  --muted-2: #26261f;
+  --border: #2c2c28;
+  --subtle: #6f6e66;
+  --faint: #46453f;
+  --accent: #d4f23c;
+  --accent-foreground: #111110;
+  --radius: 2px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-border: var(--border);
+  --color-subtle: var(--subtle);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-fraunces);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-sans: var(--font-jetbrains-mono);
+
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* High-contrast editorial serif tuning for Fraunces */
+.font-serif {
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.live-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
 }

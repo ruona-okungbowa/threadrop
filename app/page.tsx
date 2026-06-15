@@ -1,24 +1,41 @@
-import { docClient } from "@/lib/db/db";
-import { ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { Gallery } from "@/components/drop/gallery";
+import { BuyBox } from "@/components/drop/buy-box";
+import { drop } from "@/lib/drop-data";
 
-export default async function Page() {
-  const response = await docClient.send(
-    new ScanCommand({
-      TableName: process.env.DYNAMODB_TABLE_NAME,
-    }),
-  );
-  const items = response.Items ?? [];
-
+export default function Page() {
   return (
-    <main className="main">
-      <h1 className="title">Next.js + DynamoDB</h1>
+    <main className="min-h-screen bg-background">
+      {/* slim editorial header */}
+      <header className="flex items-center justify-between border-b border-border px-5 py-4 md:px-10">
+        <span className="font-mono text-[12px] uppercase tracking-[0.28em] text-foreground">
+          Threadrop
+        </span>
+        <span className="hidden font-mono text-[11px] uppercase tracking-[0.2em] text-subtle sm:block">
+          {drop.brand}
+        </span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
+          {drop.initialStock} made
+        </span>
+      </header>
 
-      <div className="container">
-        <p>{items.length} item(s) in table</p>
-        {items.map((item, i) => (
-          <pre key={i}>{JSON.stringify(item, null, 2)}</pre>
-        ))}
+      {/* two-column drop layout: gallery ~55%, buy box ~45% */}
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-5 py-10 md:px-10 md:py-14 lg:grid-cols-[55fr_45fr] lg:gap-16">
+        <section aria-label="Product imagery">
+          <Gallery drop={drop} />
+        </section>
+        <section
+          aria-label="Drop details and checkout"
+          className="lg:sticky lg:top-10 lg:self-start"
+        >
+          <BuyBox drop={drop} />
+        </section>
       </div>
+
+      <footer className="border-t border-border px-5 py-6 md:px-10">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
+          One drop. {drop.initialStock} pieces. No restock.
+        </p>
+      </footer>
     </main>
   );
 }
