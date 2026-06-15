@@ -3,29 +3,34 @@
 import { useMemo, useState } from "react";
 import { DropCard } from "./drop-card";
 import { FilterBar, type Filters } from "./filter-bar";
-import { drops, statusOf, type FeedDrop } from "@/lib/feed-data";
+import { drops, statusOf, type DropStatus, type FeedDrop } from "@/lib/feed-data";
 
-const STATUS_RANK: Record<string, number> = {
-  LIVE: 0,
-  UPCOMING: 1,
-  SOLD_OUT: 2,
-};
-
-function sortDrops(list: FeedDrop[], sort: Filters["sort"]) {
+function sortWithin(list: FeedDrop[], status: DropStatus, sort: Filters["sort"]) {
   return [...list].sort((a, b) => {
-    const ra = STATUS_RANK[statusOf(a)];
-    const rb = STATUS_RANK[statusOf(b)];
-    if (ra !== rb) return ra - rb; // live → upcoming → sold out, always
     if (sort === "ending") {
-      // within live: soonest to end first; within upcoming: soonest to start
-      const ka = statusOf(a) === "UPCOMING" ? a.startsAt : a.endsAt;
-      const kb = statusOf(b) === "UPCOMING" ? b.startsAt : b.endsAt;
+      const ka = status === "UPCOMING" ? a.startsAt : a.endsAt;
+      const kb = status === "UPCOMING" ? b.startsAt : b.endsAt;
       return ka - kb;
     }
-    // newest: most recently started/launched first
     return b.startsAt - a.startsAt;
   });
 }
+
+const SECTIONS: {
+  status: DropStatus;
+  title: string;
+  note: string;
+  dim?: boolean;
+}[] = [
+  { status: "LIVE", title: "Live now", note: "Buy before the clock runs out" },
+  { status: "UPCOMING", title: "Coming up", note: "Set a reminder — not yet open" },
+  {
+    status: "SOLD_OUT",
+    title: "Recently closed",
+    note: "The run is complete",
+    dim: true,
+  },
+];
 
 export function DropsFeed() {
   const [filters, setFilters] = useState<Filters>({
@@ -35,7 +40,7 @@ export function DropsFeed() {
     sort: "ending",
   });
 
-  const visible = useMemo(() => {
+  const { grouped, count } = useMemo(() => {
     const filtered = drops.filter((d) => {
       if (filters.category !== "All" && d.category !== filters.category)
         return false;
@@ -45,14 +50,23 @@ export function DropsFeed() {
         return false;
       return true;
     });
-    return sortDrops(filtered, filters.sort);
+    const grouped: Record<DropStatus, FeedDrop[]> = {
+      LIVE: [],
+      UPCOMING: [],
+      SOLD_OUT: [],
+    };
+    for (const d of filtered) grouped[statusOf(d)].push(d);
+    (Object.keys(grouped) as DropStatus[]).forEach((s) => {
+      grouped[s] = sortWithin(grouped[s], s, filters.sort);
+    });
+    return { grouped, count: filtered.length };
   }, [filters]);
 
   return (
-    <div className="flex flex-col gap-10">
-      <FilterBar filters={filters} onChange={setFilters} count={visible.length} />
+    <div className="flex flex-col gap-14">
+      <FilterBar filters={filters} onChange={setFilters} count={count} />
 
-      {visible.length === 0 ? (
+      {count === 0 ? (
         <div className="py-24 text-center">
           <p className="font-serif text-2xl text-subtle">Nothing here yet.</p>
           <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
@@ -60,11 +74,44 @@ export function DropsFeed() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((d, i) => (
-            <DropCard key={d.slug} drop={d} index={i} />
-          ))}
-        </div>
+        SECTIONS.map((section) => {
+          const items = grouped[section.status];
+          if (items.length === 0) return null;
+          return (
+            <section
+              key={section.status}
+              aria-label={section.title}
+              className="flex flex-col gap-7"
+            >
+              <div className="flex items-baseline justify-between border-b border-border pb-3">
+                <div className="flex items-baseline gap-3">
+                  <h2 className="flex items-center gap-2.5 font-serif text-xl tracking-tight">
+                    {section.status === "LIVE" && (
+                      <span className="live-dot h-2 w-2 rounded-full bg-accent" />
+                    )}
+                    {section.title}
+                  </h2>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-faint">
+                    {items.length}
+                  </span>
+                </div>
+                <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-subtle sm:inline">
+                  {section.note}
+                </span>
+              </div>
+
+              <div
+                className={`grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 ${
+                  section.dim ? "opacity-80" : ""
+                }`}
+              >
+                {items.map((d, i) => (
+                  <DropCard key={d.slug} drop={d} index={i} />
+                ))}
+              </div>
+            </section>
+          );
+        })
       )}
     </div>
   );

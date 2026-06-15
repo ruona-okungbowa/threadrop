@@ -31,6 +31,11 @@ export interface Brand {
   slug: string;
   name: string;
   descriptor: string;
+  /** longer maison story for the storefront hero */
+  story: string;
+  heroImage: string;
+  est: string;
+  location: string;
 }
 
 const now = Date.now();
@@ -175,23 +180,57 @@ export const brands: Brand[] = [
     slug: "atelier-nord",
     name: "Atelier Nord",
     descriptor: "Heavyweight outerwear, made in small numbered runs.",
+    story:
+      "Founded on the idea that a coat should outlive its trends, Atelier Nord cuts heavyweight shells from densely woven cotton and finishes each piece by hand. Runs are kept deliberately small and individually numbered — when a run closes, that pattern is retired.",
+    heroImage: "/brands/atelier-nord.png",
+    est: "Est. 2019",
+    location: "Oslo, NO",
   },
   {
     slug: "mono-standard",
     name: "Mono Standard",
     descriptor: "The essentials, reconsidered in boxy proportions.",
+    story:
+      "Mono Standard makes the wardrobe foundations and nothing else — boxy tees, loopback crews, and weighty basics in a tight palette of bone, grey, and ecru. Every block is refined over seasons rather than reinvented, so the proportions stay right and the cotton stays heavy.",
+    heroImage: "/brands/mono-standard.png",
+    est: "Est. 2021",
+    location: "Lisbon, PT",
   },
   {
     slug: "cinder-co",
     name: "Cinder & Co.",
     descriptor: "Hand-finished knitwear from undyed natural fibres.",
+    story:
+      "Cinder & Co. knit with undyed lambswool and natural fibres, letting the colour of the fleece carry the palette. Each crew and beanie is finished by hand in a small studio, in runs limited by the spinner's batch — so no two seasons are ever quite the same.",
+    heroImage: "/brands/cinder-co.png",
+    est: "Est. 2018",
+    location: "Donegal, IE",
   },
   {
     slug: "atlas-workshop",
     name: "Atlas Workshop",
     descriptor: "Tailored workwear cut for the long haul.",
+    story:
+      "Atlas Workshop translates honest workwear into a tailored register — washed canvas overshirts, pleated trousers, and pieces built around triple-stitched seams and hardware chosen to age well. Made to be worn hard and kept for years, not seasons.",
+    heroImage: "/brands/atlas-workshop.png",
+    est: "Est. 2020",
+    location: "Manchester, UK",
   },
 ];
+
+/** Most representative image for a brand — its live drop, else the soonest. */
+export function brandThumbnails(slug: string, count = 3): FeedDrop["image"][] {
+  const owned = drops
+    .filter((d) => d.brandSlug === slug)
+    .sort((a, b) => STATUS_ORDER[statusOf(a)] - STATUS_ORDER[statusOf(b)]);
+  return owned.slice(0, count).map((d) => d.image);
+}
+
+const STATUS_ORDER: Record<DropStatus, number> = {
+  LIVE: 0,
+  UPCOMING: 1,
+  SOLD_OUT: 2,
+};
 
 export function statusOf(d: FeedDrop): DropStatus {
   if (d.remaining <= 0) return "SOLD_OUT";

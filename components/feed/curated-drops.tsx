@@ -14,13 +14,21 @@ function curate(limit: number): FeedDrop[] {
   return [...live, ...upcoming].slice(0, limit);
 }
 
-export function CuratedDrops({ limit = 3 }: { limit?: number }) {
-  const selection = curate(limit);
+export function CuratedDrops() {
+  const selection = curate(3);
+  const [feature, ...supporting] = selection;
+
+  if (!feature) return null;
 
   return (
-    <section aria-label="Featured drops" className="flex flex-col gap-8">
+    <section aria-label="Curated drops" className="flex flex-col gap-8">
       <div className="flex items-baseline justify-between border-b border-border pb-4">
-        <h2 className="font-serif text-2xl tracking-tight">Live now</h2>
+        <div className="flex items-baseline gap-4">
+          <h2 className="font-serif text-2xl tracking-tight">Live now</h2>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-faint sm:inline">
+            Hand-picked
+          </span>
+        </div>
         <Link
           href="/drops"
           className="group font-mono text-[11px] uppercase tracking-[0.2em] text-subtle transition-colors hover:text-foreground"
@@ -32,10 +40,29 @@ export function CuratedDrops({ limit = 3 }: { limit?: number }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-        {selection.map((d, i) => (
-          <DropCard key={d.slug} drop={d} index={i} />
-        ))}
+      {/* asymmetric editorial arrangement: one feature, supporting picks beside it */}
+      <div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
+        <DropCard drop={feature} index={0} variant="featured" />
+
+        <div className="flex flex-col gap-6 lg:pt-2">
+          {supporting.map((d, i) => (
+            <div
+              key={d.slug}
+              className={i > 0 ? "border-t border-border pt-6" : ""}
+            >
+              <DropCard drop={d} index={i + 1} layout="row" />
+            </div>
+          ))}
+          <Link
+            href="/drops"
+            className="group mt-1 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground"
+          >
+            See the full feed
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
+              →
+            </span>
+          </Link>
+        </div>
       </div>
     </section>
   );
