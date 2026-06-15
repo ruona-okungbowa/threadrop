@@ -1,89 +1,82 @@
 import Link from "next/link";
-import { DropsFeed } from "@/components/feed/drops-feed";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { CuratedDrops } from "@/components/feed/curated-drops";
 import { BrandsStrip } from "@/components/feed/brands-strip";
-import { drops, statusOf } from "@/lib/feed-data";
 
 export default function Page() {
-  const liveCount = drops.filter((d) => statusOf(d) === "LIVE").length;
-
   return (
     <main className="min-h-screen bg-background">
-      {/* slim identity strip */}
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background/90 px-5 py-4 backdrop-blur-md md:px-10">
-        <Link
-          href="/"
-          className="font-mono text-[12px] uppercase tracking-[0.3em] text-foreground"
-        >
-          Threadrop
-        </Link>
+      <SiteHeader />
 
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-6 font-mono text-[11px] uppercase tracking-[0.2em] text-subtle sm:flex"
-        >
-          <a href="#drops" className="transition-opacity hover:opacity-60">
-            Drops
-          </a>
-          <span aria-hidden className="text-faint">
-            —
-          </span>
-          <a href="#brands" className="transition-opacity hover:opacity-60">
-            Brands
-          </a>
-          <span aria-hidden className="text-faint">
-            —
-          </span>
-          <a href="#about" className="transition-opacity hover:opacity-60">
-            About
-          </a>
-        </nav>
-
-        <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground">
-          <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
-          {liveCount} drops live now
-        </span>
-      </header>
-
-      {/* editorial intro moment — a sentence of identity, then straight to product */}
-      <section
-        id="about"
-        className="mx-auto max-w-[1400px] px-5 pb-12 pt-16 md:px-10 md:pb-16 md:pt-24"
-      >
+      {/* hero — the magazine cover. Identity and point of view, nothing to browse yet. */}
+      <section className="mx-auto max-w-[1400px] px-5 pb-12 pt-16 md:px-10 md:pb-20 md:pt-28">
         <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
           Threadrop — independent fashion, dropped in limited runs
         </p>
-        <h1 className="max-w-4xl font-serif text-5xl font-light leading-[0.95] tracking-tight text-balance md:text-7xl">
+        <h1 className="max-w-5xl font-serif text-5xl font-light leading-[0.95] tracking-tight text-balance md:text-[5.5rem]">
           Small labels. Smaller runs. When the clock hits zero, it&apos;s gone
           for good.
         </h1>
-      </section>
-
-      {/* the feed — the core of the page */}
-      <section
-        id="drops"
-        className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10"
-      >
-        <DropsFeed />
-      </section>
-
-      {/* brands */}
-      <section
-        id="brands"
-        className="mx-auto max-w-[1400px] px-5 pb-28 md:px-10"
-      >
-        <BrandsStrip />
-      </section>
-
-      <footer className="border-t border-border px-5 py-10 md:px-10">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-2">
-          <span className="font-mono text-[12px] uppercase tracking-[0.3em] text-foreground">
-            Threadrop
-          </span>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
-            Limited drops from independent labels. No restock.
-          </p>
+        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link
+            href="/drops"
+            className="group inline-flex items-center gap-2 rounded-[var(--radius)] bg-foreground px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.98]"
+          >
+            Shop all drops
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
+              →
+            </span>
+          </Link>
+          <Link
+            href="/brands"
+            className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle transition-colors hover:text-foreground"
+          >
+            Browse the labels
+          </Link>
         </div>
-      </footer>
+      </section>
+
+      {/* curated taste of live drops — never the full feed, never filterable */}
+      <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10">
+        <CuratedDrops limit={3} />
+      </section>
+
+      {/* a taste of the labels */}
+      <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10">
+        <BrandsStrip limit={4} />
+      </section>
+
+      {/* about / manifesto */}
+      <section
+        id="about"
+        className="border-t border-border bg-muted/40 px-5 py-20 md:px-10 md:py-28"
+      >
+        <div className="mx-auto max-w-[1400px]">
+          <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
+            About Threadrop
+          </p>
+          <p className="max-w-3xl font-serif text-2xl font-light leading-snug text-balance md:text-3xl">
+            We work with independent labels to release limited runs — numbered,
+            time-boxed, and never restocked. Each drop opens, runs its clock, and
+            closes. What you see is the whole run. When it&apos;s gone, it&apos;s
+            gone.
+          </p>
+          <div className="mt-10">
+            <Link
+              href="/drops"
+              className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground"
+            >
+              See what&apos;s dropping now
+              <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
+                →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
     </main>
   );
 }
