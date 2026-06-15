@@ -1,17 +1,33 @@
 @import "tailwindcss";
 
+/* themes: light (:root) + dark (.dark), toggled by next-themes */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* LIGHT — bone paper, warm off-black ink, ember-clay accent */
 :root {
-  /* warm off-black + bone, single acid-lime accent */
+  --background: #f2f1ea;
+  --foreground: #1a1916;
+  --muted: #e8e6dc;
+  --muted-2: #dddbce;
+  --border: #d4d2c4;
+  --subtle: #6b6a60;
+  --faint: #a4a294;
+  --accent: #c5491f;
+  --accent-foreground: #f7f6f0;
+  --radius: 2px;
+}
+
+/* DARK — warm off-black, bone ink, brighter ember so it glows */
+.dark {
   --background: #111110;
   --foreground: #f2f1ea;
   --muted: #1c1c1a;
   --muted-2: #26261f;
   --border: #2c2c28;
-  --subtle: #6f6e66;
-  --faint: #46453f;
-  --accent: #d4f23c;
-  --accent-foreground: #111110;
-  --radius: 2px;
+  --subtle: #8a897f;
+  --faint: #56554d;
+  --accent: #e0602e;
+  --accent-foreground: #14110d;
 }
 
 @theme inline {

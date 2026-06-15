@@ -18,7 +18,7 @@ export interface Drop {
   /** ms since epoch — when the drop ends */
   endsAt: number;
   sizes: SizeVariant[];
-  gallery: { label: string; tone: string }[];
+  gallery: { label: string; src: string; tone: string }[];
   specs: { label: string; value: string }[];
 }
 
@@ -28,8 +28,8 @@ const now = Date.now();
 // To preview the pre-launch countdown, set startsAt to a future time.
 export const drop: Drop = {
   brand: "Atelier Nord",
-  title: "Vessel 01",
-  edition: "Heavyweight Hooded Shell — Bone",
+  title: "Northwind Shell",
+  edition: "Heavyweight Hooded Overshirt — Bone",
   pricePence: 18500,
   currency: "£",
   shippingPence: 695,
@@ -44,10 +44,10 @@ export const drop: Drop = {
     { size: "XL", stock: 0 },
   ],
   gallery: [
-    { label: "hero", tone: "#26261f" },
-    { label: "detail", tone: "#1c1c1a" },
-    { label: "on-body", tone: "#2c2c28" },
-    { label: "scale", tone: "#201f1a" },
+    { label: "front", src: "/drop/hero.png", tone: "#7c766a" },
+    { label: "fabric", src: "/drop/detail.png", tone: "#6f6a5e" },
+    { label: "on body", src: "/drop/on-body.png", tone: "#736d61" },
+    { label: "flat", src: "/drop/scale.png", tone: "#6a6458" },
   ],
   specs: [
     { label: "Fabric", value: "450gsm brushed-back loopback cotton" },
