@@ -29,7 +29,7 @@ export function SiteHeader() {
         <span aria-hidden className="text-faint">
           —
         </span>
-        <Link href="/#about" className="transition-opacity hover:opacity-60">
+        <Link href="/about" className="transition-opacity hover:opacity-60">
           About
         </Link>
       </nav>

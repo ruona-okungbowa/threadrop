@@ -24,7 +24,7 @@ export function SiteFooter() {
             <Link href="/brands" className="transition-opacity hover:opacity-60">
               Brands
             </Link>
-            <Link href="/#about" className="transition-opacity hover:opacity-60">
+            <Link href="/about" className="transition-opacity hover:opacity-60">
               About
             </Link>
           </nav>

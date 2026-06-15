@@ -47,35 +47,6 @@ export default function Page() {
         <BrandsStrip limit={4} />
       </section>
 
-      {/* about / manifesto */}
-      <section
-        id="about"
-        className="border-t border-border bg-muted/40 px-5 py-20 md:px-10 md:py-28"
-      >
-        <div className="mx-auto max-w-[1400px]">
-          <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
-            About Threadrop
-          </p>
-          <p className="max-w-3xl font-serif text-2xl font-light leading-snug text-balance md:text-3xl">
-            We work with independent labels to release limited runs — numbered,
-            time-boxed, and never restocked. Each drop opens, runs its clock, and
-            closes. What you see is the whole run. When it&apos;s gone, it&apos;s
-            gone.
-          </p>
-          <div className="mt-10">
-            <Link
-              href="/drops"
-              className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground"
-            >
-              See what&apos;s dropping now
-              <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
-                →
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <SiteFooter />
     </main>
   );
