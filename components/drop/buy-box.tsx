@@ -7,11 +7,13 @@ import { Countdown } from "./countdown";
 import { pad } from "./use-countdown";
 import { CheckoutDrawer } from "./checkout-drawer";
 import { OrderTicket, type Claim } from "./order-ticket";
+import { useXray } from "@/lib/xray-context";
 
 type Phase = "PRELAUNCH" | "LIVE" | "ENDED";
 const HOLD_MS = 1000 * 60 * 10; // 10 minute hold
 
 export function BuyBox({ drop }: { drop: Drop }) {
+  const { setActiveSize } = useXray();
   const [now, setNow] = useState(() => Date.now());
   const [selected, setSelected] = useState<SizeKey | null>(null);
   const [holdExpiresAt, setHoldExpiresAt] = useState<number | null>(null);
@@ -130,7 +132,10 @@ export function BuyBox({ drop }: { drop: Drop }) {
         <SizeSelector
           drop={drop}
           selected={selected}
-          onSelect={setSelected}
+          onSelect={(s) => {
+            setSelected(s);
+            setActiveSize(s); // keep the x-ray inventory in focus with the choice
+          }}
           disabled={isHeld}
         />
         <div className="flex flex-col gap-2 font-mono text-sm">
