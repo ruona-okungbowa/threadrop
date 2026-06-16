@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1068.0",
     "@aws-sdk/lib-dynamodb": "^3.1068.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.7.1",
     "clsx": "^2.1.1",
     "fs": "^0.0.1-security",
