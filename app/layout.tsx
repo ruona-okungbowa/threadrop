@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/lib/cart-context";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { getFeed } from "@/lib/server/queries";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -25,18 +27,19 @@ export const viewport = {
   themeColor: "#f2f1ea",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const drops = await getFeed();
   return (
     <html
       lang="en"
       className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased bg-background`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-mono">
-        <CartProvider>
+        <CartProvider drops={drops}>
           {children}
           <CartDrawer />
         </CartProvider>
