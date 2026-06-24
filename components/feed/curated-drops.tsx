@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { DropCard } from "./drop-card";
-import { drops, statusOf, type FeedDrop } from "@/lib/feed-data";
+import { statusOf, type FeedDrop } from "@/lib/feed-data";
+import { getFeed } from "@/lib/server/queries";
 
 // Curate the homepage: lead with what's live and ending soonest, then fill
 // with the nearest upcoming drops. Never the full feed — a taste, not an index.
-function curate(limit: number): FeedDrop[] {
+function curate(drops: FeedDrop[], limit: number): FeedDrop[] {
   const live = drops
     .filter((d) => statusOf(d) === "LIVE")
     .sort((a, b) => a.endsAt - b.endsAt);
@@ -14,8 +15,9 @@ function curate(limit: number): FeedDrop[] {
   return [...live, ...upcoming].slice(0, limit);
 }
 
-export function CuratedDrops() {
-  const selection = curate(3);
+export async function CuratedDrops() {
+  const drops = await getFeed();
+  const selection = curate(drops, 3);
   const [feature, ...supporting] = selection;
 
   if (!feature) return null;

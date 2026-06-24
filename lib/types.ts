@@ -18,6 +18,20 @@ export type OrderStatus = "PENDING" | "PAID" | "CANCELLED";
 export type EntryStatus = "PENDING" | "WON" | "LOST";
 export type WaitlistStatus = "WAITING" | "PROMOTED";
 
+export type DropCategory =
+  | "Outerwear"
+  | "Tops"
+  | "Knitwear"
+  | "Trousers"
+  | "Accessories";
+export type Audience = "Men" | "Women" | "Unisex";
+
+/** A label/value row rendered on the drop page (e.g. Fabric / 450gsm cotton). */
+export interface DropSpec {
+  label: string;
+  value: string;
+}
+
 export interface Item {
   PK: string;
   SK: string;
@@ -29,7 +43,11 @@ export interface BrandItem extends Item {
   type: "BRAND";
   name: string;
   handle: string;
-  bio: string;
+  descriptor: string; // short storefront tagline
+  bio: string; // longer maison story
+  heroImg: string;
+  est: string; // e.g. "Est. 2019"
+  location: string; // e.g. "Oslo, NO"
   theme: string;
   createdAt: string; // ISO-8601
 }
@@ -40,15 +58,30 @@ export interface DropItem extends Item {
   brandId: string;
   title: string;
   description: string;
+  category: DropCategory;
+  audience: Audience;
+  currency: string; // display symbol, e.g. "£"
+  shippingPence: number; // integer pence
+  specs: DropSpec[]; // drop-page label/value rows
+  // denormalized card-summary fields (patterns #15/#16/#2) — render the feed
+  // from META alone, no per-card variant read. Static except stockRemaining.
+  brandName: string; // copy of the brand's display name
+  initialStock: number; // Σ variant initialStock (static)
+  priceFrom: number; // min variant price, integer pence (static)
+  stockRemaining: number; // Σ variant stock — display projection, maintained by Streams (§4.3)
+  sizes: string[]; // the variant size set, for in-memory feed filtering
   status: DropStatus;
   mode: DropMode;
   startsAt: string; // ISO-8601
   endsAt: string; // ISO-8601
   heroImg: string;
   gallery: string[];
-  // sparse GSI1 — brand storefront, drops by launch date (pattern #2)
-  GSI1PK: string; // BRAND#<brandId>
-  GSI1SK: string; // DROP#<startsAt>#<dropId>
+  // sparse "brand-storefront" index — drops by launch date (pattern #2)
+  brandPK: string; // BRAND#<brandId>
+  brandSK: string; // DROP#<startsAt>#<dropId>
+  // sparse "drop-feed" index — every drop by launch date (pattern #15)
+  feedPK: string; // constant "DROP" — the whole feed in one partition
+  feedSK: string; // <startsAt>#<dropId>
   // raffle audit — set only after the draw runs (pattern #9)
   raffleSeed?: string;
   entriesCount?: number;
@@ -86,9 +119,9 @@ export interface OrderItem extends Item {
   status: OrderStatus;
   holdId?: string;
   createdAt: string; // ISO-8601 (also embedded in the SK)
-  // sparse GSI2 — buyer order history (pattern #11)
-  GSI2PK: string; // USER#<userId>
-  GSI2SK: string; // ORDER#<createdAt>#<orderId>
+  // sparse "buyer-orders" index — buyer order history (pattern #11)
+  userPK: string; // USER#<userId>
+  orderSK: string; // ORDER#<createdAt>#<orderId>
 }
 
 // Raffle entry → PK=DROP#<dropId>, SK=ENTRY#<userId>
@@ -120,6 +153,9 @@ export type ThreadropItem =
   | EntryItem
   | WaitlistItem;
 
+/** Constant partition for the global drop feed (drop-feed index, pattern #15). */
+export const FEED_PK = "DROP";
+
 export const keys = {
   drop: (dropId: string) => ({ PK: `DROP#${dropId}`, SK: "PUB#META" }),
   brand: (brandId: string) => ({ PK: `BRAND#${brandId}`, SK: "PROFILE" }),
@@ -144,11 +180,15 @@ export const keys = {
     SK: `WAIT#${userId}`,
   }),
   brandGsi: (brandId: string, startsAt: string, dropId: string) => ({
-    GSI1PK: `BRAND#${brandId}`,
-    GSI1SK: `DROP#${startsAt}#${dropId}`,
+    brandPK: `BRAND#${brandId}`,
+    brandSK: `DROP#${startsAt}#${dropId}`,
+  }),
+  feedGsi: (startsAt: string, dropId: string) => ({
+    feedPK: FEED_PK,
+    feedSK: `${startsAt}#${dropId}`,
   }),
   userGsi: (userId: string, createdAt: string, orderId: string) => ({
-    GSI2PK: `USER#${userId}`,
-    GSI2SK: `ORDER#${createdAt}#${orderId}`,
+    userPK: `USER#${userId}`,
+    orderSK: `ORDER#${createdAt}#${orderId}`,
   }),
 };

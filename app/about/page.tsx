@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { brands, drops, statusOf } from "@/lib/feed-data";
+import { statusOf } from "@/lib/feed-data";
+import { getFeed, getBrandsWithDrops } from "@/lib/server/queries";
 
 export const metadata: Metadata = {
   title: "About — Threadrop",
@@ -28,7 +29,9 @@ const PRINCIPLES = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const drops = await getFeed();
+  const brands = await getBrandsWithDrops();
   const liveCount = drops.filter((d) => statusOf(d) === "LIVE").length;
 
   return (

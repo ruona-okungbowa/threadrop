@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { drops, statusOf } from "@/lib/feed-data";
+import { statusOf } from "@/lib/feed-data";
+import { getFeed } from "@/lib/server/queries";
 import { CartButton } from "@/components/cart/cart-button";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const drops = await getFeed();
   const liveCount = drops.filter((d) => statusOf(d) === "LIVE").length;
 
   return (

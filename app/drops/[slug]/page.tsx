@@ -5,19 +5,20 @@ import { CartButton } from "@/components/cart/cart-button";
 import { XrayProvider } from "@/lib/xray-context";
 import { XrayToggle } from "@/components/drop/xray-toggle";
 import { XrayPanel } from "@/components/drop/xray-panel";
-import { drop } from "@/lib/drop-data";
+import { notFound } from "next/navigation";
+import { getDropPage } from "@/lib/server/queries";
 
 export default async function DropPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  // Full buyer experience currently lives for the featured drop; other slugs
-  // fall back to it so the feed always links somewhere real.
-  await params;
+  const { slug } = await params;
+  const drop = await getDropPage(slug);
+  if (!drop) notFound();
 
   return (
-    <XrayProvider drop={drop} slug="northwind-shell">
+    <XrayProvider drop={drop} slug={slug}>
       <main className="min-h-screen bg-background">
         {/* slim editorial header */}
         <header className="flex items-center justify-between border-b border-border px-5 py-4 md:px-10">

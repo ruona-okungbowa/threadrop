@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { drops, type FeedDrop, type SizeKey } from "@/lib/feed-data";
+import { type FeedDrop, type SizeKey } from "@/lib/feed-data";
 
 export interface CartLine {
   slug: string;
@@ -53,9 +53,17 @@ interface CartValue {
 
 const CartContext = createContext<CartValue | null>(null);
 
-const dropBySlug = new Map(drops.map((d) => [d.slug, d]));
-
-export function CartProvider({ children }: { children: React.ReactNode }) {
+export function CartProvider({
+  drops,
+  children,
+}: {
+  drops: FeedDrop[];
+  children: React.ReactNode;
+}) {
+  const dropBySlug = useMemo(
+    () => new Map(drops.map((d) => [d.slug, d])),
+    [drops],
+  );
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -143,7 +151,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       remove,
       clear,
     };
-  }, [lines, open, add, setQty, remove, clear]);
+  }, [lines, open, add, setQty, remove, clear, dropBySlug]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { DropsFeed } from "@/components/feed/drops-feed";
+import { getFeed } from "@/lib/server/queries";
 
 export const metadata: Metadata = {
   title: "All Drops — Threadrop",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
     "Browse every live, upcoming, and closed drop from independent labels on Threadrop.",
 };
 
-export default function DropsPage() {
+export default async function DropsPage() {
+  const drops = await getFeed();
   return (
     <main className="min-h-screen bg-background">
       <SiteHeader />
@@ -24,7 +26,7 @@ export default function DropsPage() {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10">
-        <DropsFeed />
+        <DropsFeed drops={drops} />
       </section>
 
       <SiteFooter />

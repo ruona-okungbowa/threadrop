@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { DropCard } from "./drop-card";
 import { FilterBar, type Filters } from "./filter-bar";
-import { drops, statusOf, type DropStatus, type FeedDrop } from "@/lib/feed-data";
+import { statusOf, type DropStatus, type FeedDrop } from "@/lib/feed-data";
 
 function sortWithin(list: FeedDrop[], status: DropStatus, sort: Filters["sort"]) {
   return [...list].sort((a, b) => {
@@ -32,7 +32,7 @@ const SECTIONS: {
   },
 ];
 
-export function DropsFeed() {
+export function DropsFeed({ drops }: { drops: FeedDrop[] }) {
   const [filters, setFilters] = useState<Filters>({
     category: "All",
     audience: "All",
@@ -60,7 +60,7 @@ export function DropsFeed() {
       grouped[s] = sortWithin(grouped[s], s, filters.sort);
     });
     return { grouped, count: filtered.length };
-  }, [filters]);
+  }, [filters, drops]);
 
   return (
     <div className="flex flex-col gap-14">

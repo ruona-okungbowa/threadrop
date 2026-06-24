@@ -4,13 +4,8 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { DropCard } from "@/components/feed/drop-card";
-import {
-  brands,
-  drops,
-  statusOf,
-  type DropStatus,
-  type FeedDrop,
-} from "@/lib/feed-data";
+import { statusOf, type DropStatus, type FeedDrop } from "@/lib/feed-data";
+import { getBrand, listBrandDrops } from "@/lib/server/queries";
 
 const SECTIONS: { status: DropStatus; title: string; dim?: boolean }[] = [
   { status: "LIVE", title: "Live now" },
@@ -31,17 +26,13 @@ function group(list: FeedDrop[]) {
   return g;
 }
 
-export function generateStaticParams() {
-  return brands.map((b) => ({ brand: b.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ brand: string }>;
 }): Promise<Metadata> {
   const { brand: slug } = await params;
-  const brand = brands.find((b) => b.slug === slug);
+  const brand = await getBrand(slug);
   if (!brand) return { title: "Brand not found — Threadrop" };
   return {
     title: `${brand.name} — Threadrop`,
@@ -55,10 +46,10 @@ export default async function BrandPage({
   params: Promise<{ brand: string }>;
 }) {
   const { brand: slug } = await params;
-  const brand = brands.find((b) => b.slug === slug);
+  const brand = await getBrand(slug);
   if (!brand) notFound();
 
-  const owned = drops.filter((d) => d.brandSlug === brand.slug);
+  const owned = await listBrandDrops(slug);
   const grouped = group(owned);
   const live = grouped.LIVE.length;
 

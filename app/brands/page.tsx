@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { brands, drops, statusOf } from "@/lib/feed-data";
+import { statusOf } from "@/lib/feed-data";
+import { getBrandsWithDrops } from "@/lib/server/queries";
 
 export const metadata: Metadata = {
   title: "The Labels — Threadrop",
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
     "The independent labels releasing limited runs on Threadrop. Each with its own world.",
 };
 
-export default function BrandsPage() {
+export default async function BrandsPage() {
+  const all = await getBrandsWithDrops();
   return (
     <main className="min-h-screen bg-background">
       <SiteHeader />
@@ -26,8 +28,7 @@ export default function BrandsPage() {
 
       <section className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10">
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--radius)] bg-border md:grid-cols-2">
-          {brands.map((b) => {
-            const brandDrops = drops.filter((d) => d.brandSlug === b.slug);
+          {all.map(({ brand: b, drops: brandDrops }) => {
             const live = brandDrops.filter(
               (d) => statusOf(d) === "LIVE",
             ).length;

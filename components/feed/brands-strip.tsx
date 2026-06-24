@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { brands, brandThumbnails, drops, statusOf } from "@/lib/feed-data";
+import { statusOf } from "@/lib/feed-data";
+import { getBrandsWithDrops } from "@/lib/server/queries";
 
-export function BrandsStrip({ limit }: { limit?: number }) {
-  const shown = typeof limit === "number" ? brands.slice(0, limit) : brands;
+const STATUS_ORDER = { LIVE: 0, UPCOMING: 1, SOLD_OUT: 2 } as const;
+
+export async function BrandsStrip({ limit }: { limit?: number }) {
+  const all = await getBrandsWithDrops();
+  const shown = typeof limit === "number" ? all.slice(0, limit) : all;
 
   return (
     <section aria-label="Brands on Threadrop" className="flex flex-col gap-8">
@@ -21,10 +25,14 @@ export function BrandsStrip({ limit }: { limit?: number }) {
 
       {/* editorial rows, not a spec table — each label gets its own line of presence */}
       <div className="flex flex-col">
-        {shown.map((b, i) => {
-          const owned = drops.filter((d) => d.brandSlug === b.slug);
+        {shown.map(({ brand: b, drops: owned }, i) => {
           const live = owned.filter((d) => statusOf(d) === "LIVE").length;
-          const thumbs = brandThumbnails(b.slug, 3);
+          const thumbs = [...owned]
+            .sort(
+              (a, c) => STATUS_ORDER[statusOf(a)] - STATUS_ORDER[statusOf(c)],
+            )
+            .slice(0, 3)
+            .map((d) => d.image);
           return (
             <Link
               key={b.slug}
