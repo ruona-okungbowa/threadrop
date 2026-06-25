@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
-/* Single editorial theme: bone paper, warm off-black ink, faded-brick accent */
+/* Single editorial theme: warm cream paper, dark-brown ink, brick accent.
+   Magazine palette — see the Threadrop Landing design. */
 :root {
-  --background: #f2f1ea;
-  --foreground: #1a1916;
-  --muted: #e8e6dc;
-  --muted-2: #dddbce;
-  --border: #d4d2c4;
-  --subtle: #6b6a60;
-  --faint: #a4a294;
-  /* faded brick / dried clay — muted, earthy, quiet-luxury signal */
-  --accent: #9c4a32;
-  --accent-foreground: #f7f6f0;
+  --background: #f4ecdc;
+  --foreground: #221a12;
+  --muted: #ece0c9;
+  --muted-2: #e3d7bd;
+  --border: #dccdab;
+  --subtle: #8c7e5f;
+  --faint: #a89878;
+  /* faded brick / dried clay — earthy, quiet-luxury signal */
+  --accent: #a23b27;
+  --accent-foreground: #f0e7d5;
+  /* brighter brick for small CTAs (subscribe, blockquote rule) */
+  --accent-bright: #c1452e;
+  /* darkest editorial ink — mastheads, editor's note, colophon panels */
+  --ink: #1a140e;
+  --ink-foreground: #f0e7d5;
+  /* metallic eyebrow accents: gold on dark panels, amber on light */
+  --gold: #c9a14a;
+  --gold-dark: #a8761a;
   --radius: 2px;
 }
 
@@ -25,6 +34,11 @@
   --color-faint: var(--faint);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-bright: var(--accent-bright);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
 
   --font-serif: var(--font-fraunces);
   --font-mono: var(--font-jetbrains-mono);
@@ -107,6 +121,22 @@ body {
   animation: fade-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Cover / editorial photography settles in from a slight zoom on load */
+@keyframes hero-img {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.hero-img {
+  animation: hero-img 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Checkout drawer: backdrop fade, panel slide from right (desktop) */
 @keyframes backdrop-in {
   from {
@@ -185,6 +215,7 @@ body {
   .stock-fill,
   .size-selected,
   .fade-rise,
+  .hero-img,
   .backdrop-in,
   .drawer-panel,
   .timer-urgent,
