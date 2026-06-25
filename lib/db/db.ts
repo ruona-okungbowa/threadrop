@@ -22,4 +22,4 @@ export const docClient = DynamoDBDocumentClient.from(client, {
 });
 
 /** Single-table name; overridable via env, defaults to the spec name. */
-export const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME ?? "threadrop";
+export const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME ?? "threadrop-db";

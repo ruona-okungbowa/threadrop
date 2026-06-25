@@ -31,22 +31,13 @@ export function Masthead({ nav }: { nav: NavHandlers }) {
             onClick={nav.goLookbook}
             className="text-subtle transition-colors hover:text-ink-foreground"
           >
-            Lookbook
+            Drops
           </button>
           <button
             onClick={nav.goExpansion}
             className="text-subtle transition-colors hover:text-ink-foreground"
           >
             Labels
-          </button>
-          <button
-            onClick={nav.goExpansion}
-            className={cn(
-              "transition-colors hover:text-ink-foreground",
-              screen === "expansion" ? "text-ink-foreground" : "text-subtle",
-            )}
-          >
-            The Expansion
           </button>
         </nav>
 
