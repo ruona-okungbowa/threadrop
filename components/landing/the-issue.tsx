@@ -15,7 +15,14 @@ const PILLARS: Pillar[] = [
     title: "No overselling —",
     body: "Brands choose the quantity. We enforce it — never one more.",
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e5440" strokeWidth="1.3">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#5e5440"
+        strokeWidth="1.3"
+      >
         <circle cx="12" cy="12" r="9" />
         <line x1="5.6" y1="5.6" x2="18.4" y2="18.4" />
       </svg>
@@ -25,7 +32,14 @@ const PILLARS: Pillar[] = [
     title: "Timed holds —",
     body: "Reserve a piece and it's held for you. Miss the window and it returns to the line.",
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e5440" strokeWidth="1.3">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#5e5440"
+        strokeWidth="1.3"
+      >
         <circle cx="12" cy="12" r="9" />
         <line x1="12" y1="12" x2="12" y2="7.2" />
         <line x1="12" y1="12" x2="15.6" y2="13.4" />
@@ -36,7 +50,14 @@ const PILLARS: Pillar[] = [
     title: "Global buyers —",
     body: "One fair line for buyers worldwide. Pay in NGN, GBP or USD.",
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e5440" strokeWidth="1.3">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#5e5440"
+        strokeWidth="1.3"
+      >
         <circle cx="12" cy="12" r="9" />
         <ellipse cx="12" cy="12" rx="4" ry="9" />
         <line x1="3" y1="12" x2="21" y2="12" />
@@ -47,7 +68,14 @@ const PILLARS: Pillar[] = [
     title: "No restocks —",
     body: "A run is cut once. When it's gone, it's gone — no second cut.",
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e5440" strokeWidth="1.3">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#5e5440"
+        strokeWidth="1.3"
+      >
         <circle cx="12" cy="12" r="9" />
         <line x1="8.6" y1="8.6" x2="15.4" y2="15.4" />
         <line x1="15.4" y1="8.6" x2="8.6" y2="15.4" />
@@ -113,7 +141,7 @@ export function TheIssue({ nav }: { nav: NavHandlers }) {
         <div className="relative min-h-[60vh] overflow-hidden md:min-h-0">
           {/* Placeholder photography — swap in the Lagos cover shot at /public/landing */}
           <img
-            src="/drop/on-body.png"
+            src="/home/landing.png"
             alt="The cover — KÓRÁ Studio, Surulere"
             className="hero-img absolute inset-0 h-full w-full object-cover"
           />
@@ -195,7 +223,7 @@ export function TheIssue({ nav }: { nav: NavHandlers }) {
 
         <div className="grid border-t border-border md:grid-cols-[1.35fr_0.65fr]">
           <img
-            src="/feed/canvas-overshirt.png"
+            src="/drop/el_mshirt2.png"
             alt="Look 01 — Harmattan Overshirt by KÓRÁ Studio"
             className="h-[62vh] w-full object-cover md:h-[84vh]"
           />
@@ -248,7 +276,7 @@ export function TheIssue({ nav }: { nav: NavHandlers }) {
           </span>
         </div>
         <img
-          src="/drop/hero.png"
+          src="/home/info.png"
           alt="Contact sheet — Winter 2026 across Lagos"
           className="h-[46vh] w-full object-cover"
         />
@@ -275,9 +303,9 @@ export function TheIssue({ nav }: { nav: NavHandlers }) {
           <blockquote className="border-l-[3px] border-accent-bright pl-6">
             <p className="font-serif text-[23px] font-light italic leading-[1.42] tracking-[-0.005em] text-ink-foreground text-pretty">
               We didn&apos;t invent scarcity — Lagos has always made things this
-              way, by hand, in small numbers, with the maker&apos;s mark on them.
-              We built the line that lets the rest of the world stand in it,
-              fairly.
+              way, by hand, in small numbers, with the maker&apos;s mark on
+              them. We built the line that lets the rest of the world stand in
+              it, fairly.
             </p>
           </blockquote>
           <div>
