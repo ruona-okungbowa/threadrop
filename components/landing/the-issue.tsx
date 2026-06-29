@@ -225,7 +225,7 @@ export function TheIssue({ nav }: { nav: NavHandlers }) {
           <img
             src="/drop/el_mshirt2.png"
             alt="Look 01 — Harmattan Overshirt by KÓRÁ Studio"
-            className="h-[62vh] w-full object-cover md:h-[84vh]"
+            className="h-[62vh] w-fit object-cover md:h-[84vh]"
           />
           <div className="flex flex-col justify-between gap-10 border-t border-border px-5 py-14 md:border-l md:border-t-0 md:px-11">
             <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-subtle">
